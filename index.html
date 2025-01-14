@@ -12,17 +12,38 @@
         iframe {
             border: 0;
         }
+        #modMessage {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <div id="modMessage">Thank you to use my MOD!</div>
     <iframe 
         id="gameFrame" 
         src="https://www.crazygames.fr/embed/bullet-force-multiplayer" 
-        style="width: 100%; height: 100%;" 
+        style="width: 100vw; height: 100vh;" 
         allow="gamepad *;">
     </iframe>
 
     <script>
+        // Remove the mod message after 5 seconds
+        setTimeout(() => {
+            const modMessage = document.getElementById('modMessage');
+            if (modMessage) {
+                modMessage.style.display = 'none';
+            }
+        }, 5000);
+
         // Mapping QWERTY to AZERTY keys
         const qwertyToAzertyMap = {
             'q': 'a',
