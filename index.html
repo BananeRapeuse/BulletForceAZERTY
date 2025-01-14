@@ -50,7 +50,9 @@
             'a': 'q',
             'w': 'z',
             'z': 'w',
-            // Add other mappings if necessary
+            'm': ',',
+            ',': 'm',
+            ';': 'm', // Handle semicolon to m in some layouts
         };
 
         document.addEventListener('keydown', (event) => {
@@ -60,21 +62,23 @@
             if (qwertyToAzertyMap[event.key]) {
                 const remappedKey = qwertyToAzertyMap[event.key];
 
-                // Create a new KeyboardEvent with the remapped key
-                const remappedEvent = new KeyboardEvent('keydown', {
-                    key: remappedKey,
-                    code: `Key${remappedKey.toUpperCase()}`,
-                    keyCode: remappedKey.charCodeAt(0),
-                    charCode: remappedKey.charCodeAt(0),
-                    bubbles: true,
-                    cancelable: true,
-                });
-
-                // Dispatch the remapped event to the iframe
-                iframe.contentWindow.dispatchEvent(remappedEvent);
+                // Send the remapped key directly to the iframe
+                iframe.contentWindow.postMessage({ type: 'remap', key: remappedKey }, '*');
 
                 // Prevent the default event
                 event.preventDefault();
+            }
+        });
+
+        // Listen to the iframe for remapped keys
+        window.addEventListener('message', (event) => {
+            if (event.origin.includes('crazygames.fr')) {
+                const remappedEvent = new KeyboardEvent('keydown', {
+                    key: event.data.key,
+                    bubbles: true,
+                    cancelable: true,
+                });
+                document.dispatchEvent(remappedEvent);
             }
         });
     </script>
